@@ -28,21 +28,25 @@ class Planet(Base):
 class Favorite_character(Base):
     __tablename__ = 'favorite_character'
 
-    user_id = db.Column(Integer, ForeignKey('user.id'))
-    character_id = db.Column(Integer, ForeignKey('character.uid'), primary_key=True)
+    user_id = db.Column(Integer, db.ForeignKey('user.id'))
+    character_id = db.Column(Integer, db.ForeignKey('character.uid'), primary_key=True)
     user = db.relationship('User', backref="user")
     character = db.relationship('Character', backref="character")
 
 class Favorite_planet(Base):
     __tablename__ = 'favorite_planet'
 
-    user_id = db.Column(Integer, ForeignKey('user.id'))
-    planet_id = db.Column(Integer, ForeignKey('planet.uid'), primary_key=True)
+    user_id = db.Column(Integer, db.ForeignKey('user.id'))
+    planet_id = db.Column(Integer, db.ForeignKey('planet.uid'), primary_key=True)
     user = db.relationship('User', backref="user")
     planet = db.relationship('Planet', backref="planet")
     
-    def __repr__(self):
-        return '<User %r>' % self.username
+    # def __repr__(self):
+    #     return '<User %r>' % self.username
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
     def serialize(self):
         return {
