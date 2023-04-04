@@ -11,6 +11,8 @@ class User(db.Model):
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), default=True)
     suscription_date = db.Column(db.String, nullable=False)
+    character_id = db.relationship(foreign_keys="[character.user_id]", backref="character_id")
+    planet_id = db.relationship(foreign_keys="[planet.user_id]", backref="planet_id")
 
 class Character(db.Model):
     __tablename__ = 'character'
