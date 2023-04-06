@@ -42,7 +42,7 @@ class Favorite_planet(db.Model):
     user_id=db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
     
     # def __repr__(self):
-    #     return '<User %r>' % self.username
+    #     return '<User %r>' % self.email
 
     def save(self):
         db.session.add(self)

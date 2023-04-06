@@ -32,18 +32,58 @@ def handle_invalid_usage(error):
     return jsonify(error.to_dict()), error.status_code
 
 # generate sitemap with all your endpoints
-@app.route('/')
+@app.route('/') #GET
 def sitemap():
     return generate_sitemap(app)
 
-@app.route('/user', methods=['GET'])
-def handle_hello():
+@app.route('/characters', methods=['GET'])
+def getCharacters(): # Obtener personajes
 
-    response_body = {
+    data = {
+        "msg": "Hello, this is your GET /characters response "
+    }
+    return jsonify(data), 200 
+
+@app.route('/characters/<int:character_id>', methods=['GET'])
+def getCharacter(): # Obtener personaje por id
+
+    data = {
+        "msg": "Hello, this is your GET /one character response "
+    }
+    return jsonify(data), 200 
+
+@app.route('/planets', methods=['GET'])
+def getPlanets(): # Obtener planetas
+
+    data = {
+        "msg": "Hello, this is your GET /planets response "
+    }
+    return jsonify(data), 200 
+
+@app.route('/planets/<int:planet_id>', methods=['GET'])
+def getPlanet(): #Planeta por id
+
+    data = {
+        "msg": "Hello, this is your GET /one planet response "
+    }
+    return jsonify(data), 200 
+
+@app.route('/user', methods=['GET'])
+def getUser():
+
+    data = {
         "msg": "Hello, this is your GET /user response "
     }
+    return jsonify(data), 200 
 
-    return jsonify(response_body), 200
+@app.route('/user/favorites', methods=['GET'])
+def getFavorites():
+
+    data = {
+        "msg": "Hello, this is your GET /favorites user response "
+    }
+    return jsonify(data), 200
+
 
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
