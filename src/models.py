@@ -14,6 +14,17 @@ class User(db.Model):
     characters = db.relationship('Character', secondary="favorite_character", backref="user")
     planets = db.relationship('Planet', secondary="favorite_planet", backref="user")
 
+def serialize(self):
+        return {
+            "id": self.id,
+            "email": self.email,
+            "is_active":self.is_active,
+            "suscription_date":self.suscription_date,
+            "characters":self.characters,
+            "planets":self.planets,
+            # do not serialize the password, its a security breach
+        }
+
 class Character(db.Model):
     __tablename__ = 'character'
 
@@ -48,9 +59,11 @@ class Favorite_planet(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "email": self.email,
-            # do not serialize the password, its a security breach
-        }
+    def update(self):
+        db.commit()
+
+    def delete(self):
+        db.session.add(self)
+        db.session.commit()
+
+    

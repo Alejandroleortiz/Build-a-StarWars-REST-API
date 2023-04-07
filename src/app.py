@@ -44,7 +44,7 @@ def getCharacters(): # Obtener personajes
     }
     return jsonify(data), 200 
 
-@app.route('/characters/<character_id>', methods=['GET'])
+@app.route('/characters/<int:character_id>', methods=['GET'])
 def getCharacter(character_id): # Obtener personaje por id
 
     data = {
@@ -60,24 +60,25 @@ def getPlanets(): # Obtener planetas
     }
     return jsonify(data), 200 
 
-@app.route('/planets/<planet_id>', methods=['GET'])
-def getPlanet(planet_id): #Planeta por id
+@app.route('/planets/<int:planet_id>', methods=['GET'])
+def getPlanet(planet_id): #Obtener Planeta por id
 
     data = {
         "msg": "Hello, this is your GET /one planet response "
     }
     return jsonify({"Planet": f'{planet_id}'}), 200 
 
-@app.route('/user', methods=['GET'])
-def getUser():
-
-    data = {
-        "msg": "Hello, this is your GET /user response "
-    }
-    return jsonify(data), 200 
+@app.route('/users', methods=['GET']) #Obtener usuarios
+def get_all_users():
+    users = db.session.query(User).filter(User.email == "Hola").all()
+    usuarios = db.select(User).where(User.email.in_(["spongebob", "sandy"]))
+    print(users)
+    print(usuarios)
+    return "Hola"
+    # return jsonify(users), 200 
 
 @app.route('/user/favorites', methods=['GET'])
-def getFavorites():
+def getFavorites(): #Acceder a favoritos
 
     data = {
         "msg": "Hello, this is your GET /favorites user response "
@@ -85,14 +86,29 @@ def getFavorites():
     return jsonify(data), 200
 
 @app.route('/favorite/planet/<int:planet_id>', methods=['POST'])
-def addPlanet():
+def addPlanet(planet_id): #Agregar planeta
     data = {
         "msg": "Hello, this is your POST /Add favorites planet response "
     }
     return jsonify(data), 201
 
 @app.route('/favorite/character/<int:character_id>', methods=['POST'])
-def addCharacter():
+def addCharacter(character_id): #Agregar personaje
+    data = {
+        "msg": "Hello, this is your POST /Add favorites character response "
+    }
+    return jsonify(data), 201
+
+
+@app.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
+def deletePlanet(planet_id): #Borrar planeta
+    data = {
+        "msg": "Hello, this is your POST /Add favorites character response "
+    }
+    return jsonify(data), 201
+
+@app.route('/favorite/character/<int:character_id>', methods=['DELETE'])
+def deleteCharacter(character_id): # Borrar personaje
     data = {
         "msg": "Hello, this is your POST /Add favorites character response "
     }
