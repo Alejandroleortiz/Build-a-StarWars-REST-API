@@ -8,7 +8,8 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, serialize
+
 #from models import Person
 
 app = Flask(__name__)
@@ -70,12 +71,27 @@ def getPlanet(planet_id): #Obtener Planeta por id
 
 @app.route('/users', methods=['GET']) #Obtener usuarios
 def get_all_users():
-    users = db.session.query(User).filter(User.email == "Hola").all()
-    usuarios = db.select(User).where(User.email.in_(["spongebob", "sandy"]))
-    print(users)
-    print(usuarios)
-    return "Hola"
-    # return jsonify(users), 200 
+    users = User.query.all()
+    users = list(map(lambda user: user.serialize(), users))
+    return jsonify(users), 200 
+
+@app.route('/users', methods=['POST']) #crear usuarios
+def create_user():
+    datos = request.get_json()
+
+    user = User()
+    user.email = datos ['email']
+    user.password = datos ['password']
+    user.is_active = datos['is_active']
+    user.suscription_date = False
+    characters = False
+    planets = False
+    
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify(user.serialize()), 201
+
 
 @app.route('/user/favorites', methods=['GET'])
 def getFavorites(): #Acceder a favoritos
