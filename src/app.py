@@ -44,13 +44,13 @@ def getCharacters(): # Obtener personajes
     }
     return jsonify(data), 200 
 
-@app.route('/characters/<int:character_id>', methods=['GET'])
-def getCharacter(): # Obtener personaje por id
+@app.route('/characters/<character_id>', methods=['GET'])
+def getCharacter(character_id): # Obtener personaje por id
 
     data = {
         "msg": "Hello, this is your GET /one character response "
     }
-    return jsonify(data), 200 
+    return jsonify({"Character": f'{character_id}'}), 200 
 
 @app.route('/planets', methods=['GET'])
 def getPlanets(): # Obtener planetas
@@ -60,13 +60,13 @@ def getPlanets(): # Obtener planetas
     }
     return jsonify(data), 200 
 
-@app.route('/planets/<int:planet_id>', methods=['GET'])
-def getPlanet(): #Planeta por id
+@app.route('/planets/<planet_id>', methods=['GET'])
+def getPlanet(planet_id): #Planeta por id
 
     data = {
         "msg": "Hello, this is your GET /one planet response "
     }
-    return jsonify(data), 200 
+    return jsonify({"Planet": f'{planet_id}'}), 200 
 
 @app.route('/user', methods=['GET'])
 def getUser():
@@ -83,6 +83,20 @@ def getFavorites():
         "msg": "Hello, this is your GET /favorites user response "
     }
     return jsonify(data), 200
+
+@app.route('/favorite/planet/<int:planet_id>', methods=['POST'])
+def addPlanet():
+    data = {
+        "msg": "Hello, this is your POST /Add favorites planet response "
+    }
+    return jsonify(data), 201
+
+@app.route('/favorite/character/<int:character_id>', methods=['POST'])
+def addCharacter():
+    data = {
+        "msg": "Hello, this is your POST /Add favorites character response "
+    }
+    return jsonify(data), 201
 
 
 # this only runs if `$ python src/app.py` is executed
