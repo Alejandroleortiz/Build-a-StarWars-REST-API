@@ -14,7 +14,7 @@ class User(db.Model):
     characters = db.relationship('Character', secondary="favorite_character", backref="user")
     planets = db.relationship('Planet', secondary="favorite_planet", backref="user")
 
-def serialize(self):
+    def serialize(self):
         return {
             "id": self.id,
             "email": self.email,
@@ -30,6 +30,7 @@ class Character(db.Model):
 
     uid = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
+    picture_url = db.Column(db.String(150), nullable=False)
     description = db.Column(db.String(200), nullable=False)
 
 class Planet(db.Model):
@@ -37,6 +38,7 @@ class Planet(db.Model):
 
     uid = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150), nullable=False)
+    picture_url = db.Column(db.String(150), nullable=False)
     description = db.Column(db.String(200), nullable=False)
 
 class Favorite_character(db.Model):
