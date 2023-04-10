@@ -33,6 +33,14 @@ class Character(db.Model):
     picture_url = db.Column(db.String(150), nullable=False)
     description = db.Column(db.String(200), nullable=False)
 
+    def serialize(self):
+        return {
+            "uid": self.uid,
+            "name": self.name,
+            "picture_url":self.picture_url,
+            "description":self.description,
+        }
+
 class Planet(db.Model):
     __tablename__ = 'planet'
 
@@ -41,11 +49,25 @@ class Planet(db.Model):
     picture_url = db.Column(db.String(150), nullable=False)
     description = db.Column(db.String(200), nullable=False)
 
+    def serialize(self):
+        return {
+            "uid": self.uid,
+            "name": self.name,
+            "picture_url":self.picture_url,
+            "description":self.description,
+        }
+
 class Favorite_character(db.Model):
     __tablename__ = 'favorite_character'
 
     character_id = db.Column(db.Integer, db.ForeignKey('character.uid'), primary_key=True)
     user_id=db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+
+    def serialize(self):
+        return {
+            "character_id": self.character_id,
+            "user_id": self.user_id,
+        }
     
 
 class Favorite_planet(db.Model):
@@ -53,6 +75,12 @@ class Favorite_planet(db.Model):
 
     planet_id = db.Column(db.Integer, db.ForeignKey('planet.uid'), primary_key=True)
     user_id=db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
+
+    def serialize(self):
+        return {
+            "planet_id": self.planet_id,
+            "user_id": self.user_id,
+        }
     
     # def __repr__(self):
     #     return '<User %r>' % self.email
