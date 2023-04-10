@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, Planet, Character
 
 #from models import Person
 
@@ -39,6 +39,9 @@ def sitemap():
 
 @app.route('/characters', methods=['GET'])
 def getCharacters(): # Obtener personajes
+    characters = Character.query.all()
+    characters = list(map(lambda character: character.serialize(), characters))
+    return jsonify(characters), 200 
 
     data = {
         "msg": "Hello, this is your GET /characters response "
@@ -54,16 +57,14 @@ def getCharacter(character_id): # Obtener personaje por id
     return jsonify({"Character": f'{character_id}'}), 200 
 
 @app.route('/planets', methods=['GET'])
-def getPlanets(): # Obtener planetas
-
-    data = {
-        "msg": "Hello, this is your GET /planets response "
-    }
-    return jsonify(data), 200 
+def get_all_planets(): # Obtener planetas
+    planets = Planet.query.all()
+    planets = list(map(lambda planet: planet.serialize(), planets))
+    return jsonify(planets), 200 
 
 @app.route('/planets/<int:planet_id>', methods=['GET'])
 def getPlanet(planet_id): #Obtener Planeta por id
-
+    
     data = {
         "msg": "Hello, this is your GET /one planet response "
     }
@@ -101,14 +102,14 @@ def getFavorites(): #Acceder a favoritos
     }
     return jsonify(data), 200
 
-@app.route('/favorite/planet/<int:planet_id>', methods=['POST'])
+@app.route('/favorites/planet/<int:planet_id>', methods=['POST'])
 def addPlanet(planet_id): #Agregar planeta
     data = {
         "msg": "Hello, this is your POST /Add favorites planet response "
     }
     return jsonify(data), 201
 
-@app.route('/favorite/character/<int:character_id>', methods=['POST'])
+@app.route('/favorites/character/<int:character_id>', methods=['POST'])
 def addCharacter(character_id): #Agregar personaje
     data = {
         "msg": "Hello, this is your POST /Add favorites character response "
@@ -116,14 +117,14 @@ def addCharacter(character_id): #Agregar personaje
     return jsonify(data), 201
 
 
-@app.route('/favorite/planet/<int:planet_id>', methods=['DELETE'])
+@app.route('/favorites/planet/<int:planet_id>', methods=['DELETE'])
 def deletePlanet(planet_id): #Borrar planeta
     data = {
         "msg": "Hello, this is your POST /Add favorites character response "
     }
     return jsonify(data), 201
 
-@app.route('/favorite/character/<int:character_id>', methods=['DELETE'])
+@app.route('/favorites/character/<int:character_id>', methods=['DELETE'])
 def deleteCharacter(character_id): # Borrar personaje
     data = {
         "msg": "Hello, this is your POST /Add favorites character response "

@@ -85,15 +85,15 @@ class Favorite_planet(db.Model):
     # def __repr__(self):
     #     return '<User %r>' % self.email
 
-    def save(self):
-        db.session.add(self)
-        db.session.commit()
+def save(self):
+    db.session.add(self)
+    db.session.commit()
 
-    def update(self):
-        db.commit()
+def update(self):
+    db.commit()
 
-    def delete(self):
-        db.session.add(self)
-        db.session.commit()
+def delete(self):
+    db.session.add(self)
+    db.session.commit()
 
     
