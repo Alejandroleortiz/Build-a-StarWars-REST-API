@@ -58,13 +58,15 @@ def create_character():
 
     return jsonify(character.serialize()), 201
 
-@app.route('/characters/<int:character_id>', methods=['GET'])
-def getCharacter(character_id): # Obtener personaje por id
+@app.route('/characters/<int:uid>', methods=['GET'])
+def getCharacter(uid): # Obtener personaje por id
 
-    data = {
-        "msg": "Hello, this is your GET /one character response "
-    }
-    return jsonify({"Character": f'{character_id}'}), 200 
+    character = Character.query.get(uid) #Buscar el personaje en la base de datos
+
+    if character is not None:
+        return jsonify(character.serialize()), 200 
+    else:
+        return jsonify({"error":"Character not found"})
 
 @app.route('/planets', methods=['GET'])
 def get_all_planets(): # Obtener planetas
@@ -87,13 +89,15 @@ def create_planet():
 
     return jsonify(planet.serialize()), 201
 
-@app.route('/planets/<int:planet_id>', methods=['GET'])
-def getPlanet(planet_id): #Obtener Planeta por id
-    
-    data = {
-        "msg": "Hello, this is your GET /one planet response "
-    }
-    return jsonify({"Planet": f'{planet_id}'}), 200 
+@app.route('/planets/<int:uid>', methods=['GET'])
+def getPlanet(uid): #Obtener Planeta por id
+
+    planet = Planet.query.get(uid) #Buscar el planeta en la base de datos
+
+    if planet is not None:
+        return jsonify(planet.serialize()), 200 
+    else:
+        return jsonify({"error":"Planet not found"})
 
 @app.route('/users', methods=['GET']) #Obtener usuarios
 def get_all_users():
@@ -101,7 +105,7 @@ def get_all_users():
     users = list(map(lambda user: user.serialize(), users))
     return jsonify(users), 200 
 
-@app.route('/users', methods=['POST']) #crear usuarios
+@app.route('/users', methods=['POST']) #Crear usuarios
 def create_user():
     datos = request.get_json()
 
@@ -109,7 +113,7 @@ def create_user():
     user.email = datos ['email']
     user.password = datos ['password']
     user.is_active = datos['is_active']
-    user.suscription_date = False
+    user.suscription_date = datetime.now()
     characters = False
     planets = False
     
@@ -117,6 +121,18 @@ def create_user():
     db.session.commit()
 
     return jsonify(user.serialize()), 201
+
+@app.route('/users', methods=['DELETE'])
+def delete_all_users():
+    users = User.query.all()
+
+    if users:
+        for user in users:
+            db.session.delete(user)
+        db.session.commit()
+        return jsonify({"message": "All users have been deleted."}), 200
+    else:
+        return jsonify({"error": "No users found."}), 404
 
 
 @app.route('/user/favorites', methods=['GET'])

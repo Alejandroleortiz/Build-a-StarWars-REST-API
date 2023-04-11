@@ -10,20 +10,25 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), default=True)
-    suscription_date = db.Column(db.String, nullable=False)
+    suscription_date = db.Column(db.DateTime(), default=db.func.now(), nullable=False)
     characters = db.relationship('Character', secondary="favorite_character", backref="user")
     planets = db.relationship('Planet', secondary="favorite_planet", backref="user")
-
+    
     def serialize(self):
         return {
             "id": self.id,
-            "email": self.email,
             "is_active":self.is_active,
-            "suscription_date":self.suscription_date,
-            "characters":self.characters,
-            "planets":self.planets,
+            "suscription_date":self.datetime.now(),
+            "characters":self.get_characters(),
+            "planets":self.get_planets(),
             # do not serialize the password, its a security breach
         }
+    
+    def get_characters(self):
+        return list(map(lambda c: c.serialize(), self.characters))
+    
+    def get_planets(self):
+        return list(map(lambda p: p.serialize(), self.planets))
 
 class Character(db.Model):
     __tablename__ = 'character'
