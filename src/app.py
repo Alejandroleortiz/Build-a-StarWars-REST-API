@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User, Planet, Character
+from models import db, User, Planet, Character, Favorite_character, Favorite_planet
 
 #from models import Person
 
@@ -43,10 +43,20 @@ def getCharacters(): # Obtener personajes
     characters = list(map(lambda character: character.serialize(), characters))
     return jsonify(characters), 200 
 
-    data = {
-        "msg": "Hello, this is your GET /characters response "
-    }
-    return jsonify(data), 200 
+@app.route('/characters', methods=['POST']) #crear personajes
+def create_character():
+    datos = request.get_json()
+
+    character = Character()
+    character.uid = datos ['uid']
+    character.name = datos ['name']
+    character.picture_url = datos['picture_url']
+    character.description = datos['description']
+    
+    db.session.add(character)
+    db.session.commit()
+
+    return jsonify(character.serialize()), 201
 
 @app.route('/characters/<int:character_id>', methods=['GET'])
 def getCharacter(character_id): # Obtener personaje por id
@@ -61,6 +71,21 @@ def get_all_planets(): # Obtener planetas
     planets = Planet.query.all()
     planets = list(map(lambda planet: planet.serialize(), planets))
     return jsonify(planets), 200 
+
+@app.route('/planets', methods=['POST']) #crear planetas
+def create_planet():
+    datos = request.get_json()
+
+    planet = Planet()
+    planet.uid = datos ['uid']
+    planet.name = datos ['name']
+    planet.picture_url = datos['picture_url']
+    planet.description = datos['description']
+    
+    db.session.add(planet)
+    db.session.commit()
+
+    return jsonify(planet.serialize()), 201
 
 @app.route('/planets/<int:planet_id>', methods=['GET'])
 def getPlanet(planet_id): #Obtener Planeta por id
@@ -97,24 +122,37 @@ def create_user():
 @app.route('/user/favorites', methods=['GET'])
 def getFavorites(): #Acceder a favoritos
 
-    data = {
-        "msg": "Hello, this is your GET /favorites user response "
-    }
-    return jsonify(data), 200
+    favorites_characters = Favorite_character.query.all()
+    favorites_characters = list(map(lambda favorite_character: favorite_character.serialize(), favorites_characters))
+    favorites_planets = Favorite_planet.query.all()
+    favorites_planets = list(map(lambda favorite_planet: favorite_planet.serialize(), favorites_planets))
+    return jsonify(favorites_characters, favorites_planets), 200
 
-@app.route('/favorites/planet/<int:planet_id>', methods=['POST'])
+@app.route('/user/favorites/planet/<int:planet_id>', methods=['POST'])
 def addPlanet(planet_id): #Agregar planeta
-    data = {
-        "msg": "Hello, this is your POST /Add favorites planet response "
-    }
-    return jsonify(data), 201
+    datos = request.get_json()
+    
+    favorite_planet = Favorite_planet()
+    favorite_planet.planet_id = planet_id
+    favorite_planet.user_id = datos ['user_id']
 
-@app.route('/favorites/character/<int:character_id>', methods=['POST'])
+    db.session.add(favorite_planet)
+    db.session.commit()
+
+    return jsonify(favorite_planet.serialize()), 201
+
+@app.route('/user/favorites/character/<int:character_id>', methods=['POST'])
 def addCharacter(character_id): #Agregar personaje
-    data = {
-        "msg": "Hello, this is your POST /Add favorites character response "
-    }
-    return jsonify(data), 201
+    datos = request.get_json()
+    
+    favorite_character = Favorite_character()
+    favorite_character.character_id = character_id
+    favorite_character.user_id = datos ['user_id']
+
+    db.session.add(favorite_character)
+    db.session.commit()
+
+    return jsonify(favorite_character.serialize()), 201
 
 
 @app.route('/favorites/planet/<int:planet_id>', methods=['DELETE'])
