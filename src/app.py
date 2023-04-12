@@ -9,7 +9,7 @@ from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, User, Planet, Character, Favorite_character, Favorite_planet
-import datetime
+
 
 #from models import Person
 

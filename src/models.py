@@ -18,7 +18,7 @@ class User(db.Model):
         return {
             "id": self.id,
             "is_active":self.is_active,
-            "suscription_date":self.datetime.now(),
+            "suscription_date":self.suscription_date,
             "characters":self.get_characters(),
             "planets":self.get_planets(),
             # do not serialize the password, its a security breach
