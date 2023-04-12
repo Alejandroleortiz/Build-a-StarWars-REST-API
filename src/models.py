@@ -57,6 +57,10 @@ class Character(db.Model):
             "description":self.description,
         }
 
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
     def delete(self):
         db.session.add(self)
         db.session.commit()
@@ -76,6 +80,10 @@ class Planet(db.Model):
             "picture_url":self.picture_url,
             "description":self.description,
         }
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
 
     def delete(self):
         db.session.add(self)

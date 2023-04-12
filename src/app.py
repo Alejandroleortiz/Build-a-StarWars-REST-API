@@ -53,9 +53,9 @@ def create_character():
     character.name = datos ['name']
     character.picture_url = datos['picture_url']
     character.description = datos['description']
-    
-    db.session.add(character)
-    db.session.commit()
+    character.save()
+    # db.session.add(character)
+    # db.session.commit()
 
     return jsonify(character.serialize()), 201
 
@@ -84,9 +84,10 @@ def create_planet():
     planet.name = datos ['name']
     planet.picture_url = datos['picture_url']
     planet.description = datos['description']
-    
-    db.session.add(planet)
-    db.session.commit()
+    planet.save()
+
+    # db.session.add(planet)
+    # db.session.commit()
 
     return jsonify(planet.serialize()), 201
 
