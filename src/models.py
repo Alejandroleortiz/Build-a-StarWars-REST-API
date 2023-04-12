@@ -29,6 +29,17 @@ class User(db.Model):
     
     def get_planets(self):
         return list(map(lambda p: p.serialize(), self.planets))
+    
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
+
+    def update(self):
+        db.commit()
+
+    def delete(self):
+        db.session.add(self)
+        db.session.commit()
 
 class Character(db.Model):
     __tablename__ = 'character'
@@ -46,6 +57,10 @@ class Character(db.Model):
             "description":self.description,
         }
 
+    def delete(self):
+        db.session.add(self)
+        db.session.commit()
+
 class Planet(db.Model):
     __tablename__ = 'planet'
 
@@ -62,6 +77,10 @@ class Planet(db.Model):
             "description":self.description,
         }
 
+    def delete(self):
+        db.session.add(self)
+        db.session.commit()
+
 class Favorite_character(db.Model):
     __tablename__ = 'favorite_character'
 
@@ -73,6 +92,10 @@ class Favorite_character(db.Model):
             "character_id": self.character_id,
             "user_id": self.user_id,
         }
+        
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
     
 
 class Favorite_planet(db.Model):
@@ -86,19 +109,14 @@ class Favorite_planet(db.Model):
             "planet_id": self.planet_id,
             "user_id": self.user_id,
         }
+
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
     
     # def __repr__(self):
     #     return '<User %r>' % self.email
 
-def save(self):
-    db.session.add(self)
-    db.session.commit()
 
-def update(self):
-    db.commit()
-
-def delete(self):
-    db.session.add(self)
-    db.session.commit()
 
     

@@ -9,6 +9,7 @@ from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, User, Planet, Character, Favorite_character, Favorite_planet
+import datetime
 
 #from models import Person
 
@@ -113,12 +114,11 @@ def create_user():
     user.email = datos ['email']
     user.password = datos ['password']
     user.is_active = datos['is_active']
-    user.suscription_date = datetime.now()
     characters = False
     planets = False
-    
-    db.session.add(user)
-    db.session.commit()
+    user.save()
+    # db.session.add(user)
+    # db.session.commit()
 
     return jsonify(user.serialize()), 201
 
@@ -152,8 +152,9 @@ def addPlanet(planet_id): #Agregar planeta
     favorite_planet.planet_id = planet_id
     favorite_planet.user_id = datos ['user_id']
 
-    db.session.add(favorite_planet)
-    db.session.commit()
+    save(favorite_planet)
+    # db.session.add(favorite_planet)
+    # db.session.commit()
 
     return jsonify(favorite_planet.serialize()), 201
 
@@ -165,25 +166,36 @@ def addCharacter(character_id): #Agregar personaje
     favorite_character.character_id = character_id
     favorite_character.user_id = datos ['user_id']
 
-    db.session.add(favorite_character)
-    db.session.commit()
+    save(favorite_character)
+    # db.session.add(favorite_character)
+    # db.session.commit()
 
     return jsonify(favorite_character.serialize()), 201
 
 
-@app.route('/favorites/planet/<int:planet_id>', methods=['DELETE'])
+@app.route('/user/favorites/planet/<int:planet_id>', methods=['DELETE'])
 def deletePlanet(planet_id): #Borrar planeta
-    data = {
-        "msg": "Hello, this is your POST /Add favorites character response "
-    }
-    return jsonify(data), 201
+    
+    planet = Planet.query.get(planet_id)
 
-@app.route('/favorites/character/<int:character_id>', methods=['DELETE'])
-def deleteCharacter(character_id): # Borrar personaje
-    data = {
-        "msg": "Hello, this is your POST /Add favorites character response "
-    }
-    return jsonify(data), 201
+    if planet is None:
+        return jsonify({"error":"Planet not found"}), 404
+    
+    delete(planet)
+
+    return jsonify({"message":f"Planet wit ID {planet_id} deleted"}), 200
+
+@app.route('/user/favorites/planet/<int:character_id>', methods=['DELETE'])
+def deleteCharacter(character_id): #Borrar personaje
+    
+    character = Character.query.get(character_id)
+
+    if character is None:
+        return jsonify({"error":"Character not found"}), 404
+    
+    delete(character)
+
+    return jsonify({"message":f"Character wit ID {character_id} deleted"}), 200
 
 
 # this only runs if `$ python src/app.py` is executed
