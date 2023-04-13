@@ -153,7 +153,7 @@ def addPlanet(planet_id): #Agregar planeta
     favorite_planet.planet_id = planet_id
     favorite_planet.user_id = datos ['user_id']
 
-    save(favorite_planet)
+    favorite_planet.save()
     # db.session.add(favorite_planet)
     # db.session.commit()
 
@@ -166,8 +166,7 @@ def addCharacter(character_id): #Agregar personaje
     favorite_character = Favorite_character()
     favorite_character.character_id = character_id
     favorite_character.user_id = datos ['user_id']
-
-    save(favorite_character)
+    favorite_character.save()
     # db.session.add(favorite_character)
     # db.session.commit()
 
@@ -182,11 +181,11 @@ def deletePlanet(planet_id): #Borrar planeta
     if planet is None:
         return jsonify({"error":"Planet not found"}), 404
     
-    delete(planet)
+    planet.delete()
 
     return jsonify({"message":f"Planet wit ID {planet_id} deleted"}), 200
 
-@app.route('/user/favorites/planet/<int:character_id>', methods=['DELETE'])
+@app.route('/user/favorites/character/<int:character_id>', methods=['DELETE'])
 def deleteCharacter(character_id): #Borrar personaje
     
     character = Character.query.get(character_id)
@@ -194,7 +193,7 @@ def deleteCharacter(character_id): #Borrar personaje
     if character is None:
         return jsonify({"error":"Character not found"}), 404
     
-    delete(character)
+    character.delete()
 
     return jsonify({"message":f"Character wit ID {character_id} deleted"}), 200
 
